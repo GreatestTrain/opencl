@@ -1,13 +1,22 @@
 #include <CL/opencl.hpp>
 #include <iostream>
 
-// Setup OpenCL - as many C libraries, OpenCL needs initialization
-
 cl_device_id device;
-clGetDeviceIDs(NULL, CL_DEVICE_TYPE_CPU, 1, &device, NULL);
+cl_context context;
+cl_command_queue queue;
 
-cl_context context = clCreateContext(NULL, 1, &device, NULL, NULL, NULL);
-cl_command_queue queue = clCreateCommandQueue(context, device, (cl_command_queue_properties)0, NULL);
+cl_program program;
+cl_kernel kernel;
+
+cl_mem buffer;
+
+void initialize() {
+    // Setup OpenCL - as many C libraries, OpenCL needs initialization
+    // cl_device_id device;
+    clGetDeviceIDs(NULL, CL_DEVICE_TYPE_CPU, 1, &device, NULL);
+    context = clCreateContext(NULL, 1, &device, NULL, NULL, NULL);
+    queue = clCreateCommandQueue(context, device, (cl_command_queue_properties)0, NULL);
+}
 
 // kernel -> calculates the Sin
 char* source = {
@@ -17,27 +26,46 @@ char* source = {
     "}\n"
 };
 
-// Compile Kernel - (char* source)
-cl_program program = clCreateProgramWithSource(context, 1, (const char**)&source, NULL, NULL);
-clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
-cl_kernel kernel = clCreateKernel(program, "calcSin", NULL);
+void createProgram() {
+    // Compile Kernel - (char* source)
+    program = clCreateProgramWithSource(context, 1, (const char**)&source, NULL, NULL);
+    clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+    kernel = clCreateKernel(program, "calcSin", NULL);
 
-// create memory buffer - allocate memory on global memory of device (gpu)
-cl_mem buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, DATA_SIZE, NULL, NULL);
+}
 
-// copy data to input (buffer)
-clEnqueueWriteBuffer(queue, buffer, CL_FALSE, 0, DATA_SIZE, data, 0, NULL, NULL);
+void createBuffer() {
+    // create memory buffer - allocate memory on global memory of device (gpu)
+    buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, DATA_SIZE, NULL, NULL);
+     // copy data to input (buffer)
+    clEnqueueWriteBuffer(queue, buffer, CL_FALSE, 0, DATA_SIZE, data, 0, NULL, NULL);
 
-// Execute kernel
-clSetKernelArg(kernel, 0, sizeof(buffer), &buffer);
-size_t global_dimensions[] = {LENGTH, 0, 0};
-clEnqueueNDRangeKernel(queue, kernel, 1, NULL, global_dimensions, NULL, 0, NULL, NULL);
+}
 
-// Read the output
-clEnqueueReadBuffer(queue, kernel, CL_FALSE, 0, sizeof(cl_float)*LENGTH, data, 0, NULL, NULL);
+int main() {
+    initialize();
+    createProgram();
 
-//Finish queue
-clFinish(queue);
+    
+    cl_mem buffer = clCreateBuffer(context, CL_MEM_READ_WRITE, DATA_SIZE, NULL, NULL);
+
+   
+    clEnqueueWriteBuffer(queue, buffer, CL_FALSE, 0, DATA_SIZE, data, 0, NULL, NULL);
+
+    // Execute kernel
+    clSetKernelArg(kernel, 0, sizeof(buffer), &buffer);
+    size_t global_dimensions[] = {LENGTH, 0, 0};
+    clEnqueueNDRangeKernel(queue, kernel, 1, NULL, global_dimensions, NULL, 0, NULL, NULL);
+
+    // Read the output
+    clEnqueueReadBuffer(queue, kernel, CL_FALSE, 0, sizeof(cl_float)*LENGTH, data, 0, NULL, NULL);
+
+    // wait for queue to finish
+
+    //Finish queue
+    clFinish(queue);
+}
+
 
 
 

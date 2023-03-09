@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
 
     // int count = int(std::stoi(argv[0]));
-    int count = 5;
+    int count = 100;
     std::vector<float> vecA;
     std::vector<float> vecB(vecA.size());
 

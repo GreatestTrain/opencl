@@ -4,10 +4,20 @@
 #include <CL/opencl.hpp>
 #include <iostream>
 #include <vector>
-#define DATA_SIZE 10
+#define DATA_SIZE 30
 
 std::vector<cl::Platform> platforms;
 std::vector<cl::Device> devices;
+
+cl::Platform& get_platforms() {
+    cl::Platform::get(&platforms);
+    return platforms[0];
+}
+
+std::vector<cl::Device>& get_devices() {
+    platforms[0].getDevices(CL_DEVICE_TYPE_ALL, &devices);
+    return devices;
+}
 
 int main() {
 
@@ -15,18 +25,13 @@ int main() {
     std::vector<float> data(DATA_SIZE);
     for (int i = 0; i < DATA_SIZE; i++)
     {
-        data.push_back(i * CL_M_PI);
+        data.push_back(float(i * CL_M_PI));
     }
-    std::vector<float> output(size_t(data.size()));
-    std::cout << data.size() << std::endl;
+    std::cout << "Vector size: " << data.size() << std::endl;
+    std::vector<float> output(int(data.size()));
 
-    // get platforms
-    std::vector<cl::Platform> platforms;
-    cl::Platform::get(&platforms);
-
-    // get devices
-    std::vector<cl::Device> devices;
-    platforms[0].getDevices(CL_DEVICE_TYPE_GPU, &devices);
+    get_platforms();
+    get_devices();
 
     // get context
     cl::Context context(devices);

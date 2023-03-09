@@ -7,6 +7,8 @@ kernel void vadd(
 {
     int i = get_global_id(0);
     if (i < count) {
-        c[i] = a[i] + b[i]
+        c[i] = a[i] + b[i];
+    } else {
+        c[i] = -1;
     }
 }

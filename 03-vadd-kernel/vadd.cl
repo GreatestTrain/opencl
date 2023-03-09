@@ -9,6 +9,6 @@ kernel void vadd(
     if (i < count) {
         c[i] = a[i] + b[i];
     } else {
-        c[i] = -1;
+        c[i] = i;
     }
 }

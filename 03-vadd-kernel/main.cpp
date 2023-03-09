@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
+#include <sstream>
 #define CL_HPP_ENABLE_EXCEPTIONS
 
 #include <CL/opencl.hpp>
@@ -9,16 +10,15 @@
 #include <vector>
 #include <exception>
 #include <math.h>
+#include <streambuf>
 
-std::string get_file_contents(char* filepath) {
-    std::string buffer;
-    std::ifstream file;
-    file.open(filepath);
-    if ( file.is_open() && file.good() ) {
-      file >> buffer;
+std::string get_file_contents(char *filepath) {
+    std::ifstream t(filepath);
+    std::stringstream strStream;
+
+    strStream << t.rdbuf();
+    return strStream.str();
     }
-    return buffer;
-}
 
 int main(int argc, char *argv[])
 {
@@ -34,11 +34,11 @@ int main(int argc, char *argv[])
     cl::Context context(devices);
 
     // Read kernel_str
-    char* filepath = (char*)"vadd.cl";
-    std::string kernel_str = get_file_contents(filepath);
+    std::string kernel_str = get_file_contents(argv[1]);
 
     // Initialize and build program
-    cl::Program program(context, devices, kernel_str);
+    cl::Program program(context, kernel_str.c_str());
+    // cl::Program::Sources sources();
     program.build(devices);
 
     int size = 10;
@@ -57,18 +57,19 @@ int main(int argc, char *argv[])
     std::vector<float> vecC(size);
 
     for (float& element : vecA) {
-      element = (float)(0.01 + rand() / RAND_MAX);
+      element = (float)(0.01 + rand() % 100);
     }
     for (float& element : vecB) {
-      element = (float)(0.01 + rand() / RAND_MAX);
+      element = (float)(0.03 + rand() % 100);
     }
 
 
     cl::Kernel kernel(program, "vadd");
+    int new_size = 3;
     kernel.setArg(0, bufferA);
     kernel.setArg(1, bufferB);
     kernel.setArg(2, bufferC);
-    kernel.setArg(3, size);
+    kernel.setArg(3, new_size);
 
     // TODO Initialize queue
     cl::CommandQueue queue(context);
@@ -81,9 +82,8 @@ int main(int argc, char *argv[])
 
     queue.finish();
 
-    for (float& element : vecC) {
-      std::cout << element << std::endl;
+    for (int i = 0; i != size; i++) {
+      std::cout << vecA[i] << " + " << vecB[i] << " = " << vecC[i] << std::endl;
     }
-
 }
 

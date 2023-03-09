@@ -1,18 +1,17 @@
-#include <CL/cl.h>
-#include <cstdlib>
-#include <string>
-#define __CL_ENABLE_EXCEPTIONS
+#define CL_HPP_ENABLE_EXCEPTIONS
 
 #include <CL/opencl.hpp>
 
 #include <vector>
 #include <iostream>
 #include <math.h>
+#include <cstdlib>
+#include <string>
 
-char* kernel_str =
-    "__global kernel void sumVectors(__global const float* vecA, __global const float* vecB"
-    "   id = get_global_id(0);\n"
-    "   res[id] = vecA[id] + vecB[id];\n"
+const char* kernel_str =
+    "kernel void sumVectors(global const float* vecA, global const float* vecB, global float* output) {\n"
+    "   int id = get_global_id(0);\n"
+    "   output[id] = vecA[id] + vecB[id];\n"
     "}\n";
 
 
@@ -23,7 +22,8 @@ std::vector<cl::Device> devices;
 int main(int argc, char* argv[]) {
 
 
-    int count = int(std::stoi(argv[0]));
+    // int count = int(std::stoi(argv[0]));
+    int count = 5;
     std::vector<float> vecA;
     std::vector<float> vecB(vecA.size());
 
@@ -45,7 +45,13 @@ int main(int argc, char* argv[]) {
 
     // Initialize Program - Build it
     cl::Program program(context, kernel_str);
-    program.build(devices);
+    auto res = program.build(devices);
+
+    if (res != 0) {
+        std::cout << "Build Error" << std::endl;
+    } else {
+        std::cout << "Build Succesful" << std::endl;
+    }
 
     // Initialize buffers
     cl::Buffer vecA_buffer(context, CL_MEM_READ_ONLY, sizeof(float) * vecA.size());
@@ -70,8 +76,10 @@ int main(int argc, char* argv[]) {
     queue.enqueueReadBuffer(output_buffer, CL_FALSE, 0, sizeof(float) * output.size(),
 output.data());
 
-    for (float& element : output) {
-        std::cout << element << std::endl;
+    queue.finish();
+
+    for (size_t i = 0; i != count; i++) {
+        std::cout << vecA[i] << " + " << vecB[i] << " = " << output[i] << std::endl;
     }
 
 }

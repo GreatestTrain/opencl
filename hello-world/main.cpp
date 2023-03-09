@@ -27,8 +27,8 @@ int main() {
     {
         data.push_back(float(i * CL_M_PI));
     }
-    std::cout << "Vector size: " << data.size() << std::endl;
     std::vector<float> output(int(data.size()));
+    std::cout << "Vector size: " << data.size() << "|" << output.size() << std::endl;
 
     get_platforms();
     get_devices();

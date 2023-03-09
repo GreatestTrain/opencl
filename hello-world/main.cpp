@@ -2,6 +2,7 @@
 #define CL_HPP_TARGET_OPENCL_VERSION 200
 
 #include <CL/opencl.hpp>
+#include <math.h>
 #include <iostream>
 #include <vector>
 #define DATA_SIZE 30
@@ -25,7 +26,7 @@ int main() {
     std::vector<float> data(DATA_SIZE);
     for (int i = 0; i < DATA_SIZE; i++)
     {
-        data.push_back(float(i * CL_M_PI));
+        data.push_back(float(i * CL_M_PI_2));
     }
     std::vector<float> output(int(data.size()));
     std::cout << "Vector size: " << data.size() << "|" << output.size() << std::endl;
@@ -65,7 +66,7 @@ int main() {
     queue.finish();
 
     for (int i = 0; i < data.size(); i++) {
-        std::cout << data[i] << " -> " << output[i] << std::endl;
+        std::cout << data[i] << " -> " << round(output[i]) << std::endl;
     }
 
     return 0;

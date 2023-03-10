@@ -18,7 +18,8 @@ std::string get_file_contents(char *filepath) {
 
     strStream << t.rdbuf();
     return strStream.str();
-    }
+
+}
 
 int main(int argc, char *argv[])
 {
@@ -57,10 +58,10 @@ int main(int argc, char *argv[])
     std::vector<float> vecC(size);
 
     for (float& element : vecA) {
-      element = (float)(0.01 + rand() % 100);
+      element = (float)(0.01 + rand() / 100.0f);
     }
     for (float& element : vecB) {
-      element = (float)(0.03 + rand() % 100);
+      element = (float)(0.03 + rand() / 100.0f);
     }
 
 

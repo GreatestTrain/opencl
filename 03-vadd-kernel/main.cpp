@@ -1,6 +1,3 @@
-#include <cstdio>
-#include <cstdlib>
-#include <sstream>
 #define CL_HPP_ENABLE_EXCEPTIONS
 
 #include <CL/opencl.hpp>

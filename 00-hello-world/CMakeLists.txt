@@ -7,5 +7,3 @@ target_link_libraries(hello-world-cl PRIVATE OpenCL)
 target_include_directories(hello-world-cl PRIVATE "/usr/include")
 
 set(CMAKE_CURRENT_BINARY_DIR "")
-message(STATUS "${CMAKE_CURRENT_BINARY_DIR}")
-message(STATUS "${EXECUTABLE_OUTPUT_PATH}")

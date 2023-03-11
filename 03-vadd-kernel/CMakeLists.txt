@@ -13,4 +13,5 @@ add_test(
     COMMAND check-kernel-vadd "vadd.cl"
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
+
 enable_testing()

@@ -35,14 +35,7 @@ int main(int argc, char *argv[])
 
     int size = 10;
 
-    // TODO -> Initalize buffers
-    // Initialize buffers
-    cl::Buffer bufferA(context, CL_MEM_READ_ONLY, sizeof(float) * size);
-    cl::Buffer bufferB(context, CL_MEM_READ_ONLY, sizeof(float) * size);
-    cl::Buffer bufferC(context, CL_MEM_WRITE_ONLY, sizeof(float) * size);
-
     // write buffers
-    //
     unsigned int dimsA[2] = {3, 2};
     unsigned int dimsB[2] = {2, 4};
 
@@ -54,12 +47,31 @@ int main(int argc, char *argv[])
     std::vector<float> vecB(sizeB);
     std::vector<float> vecC(sizeC);
 
-    get_matrix(argv[1], vecA);
-    get_matrix(argv[2], vecB);
+    get_matrix<float>(argv[2], vecA);
+    get_matrix<float>(argv[3], vecB);
 
-    for (float& i : vecA) {
-      std::cout << i << std::endl;
+    std::cout << "Printin A matrix: " << std::endl << "=========" << std::endl;
+    for (int i = 0; i != dimsA[0]; i++) {
+      for (int j = 0; j != dimsA[1]; j++) {
+        std::cout << vecA[j + i * dimsA[1]] << " ";
+      }
+      std::cout << std::endl;
     }
+
+    std::cout << std::endl;
+    std::cout << "Printing B matrix: " << std::endl << "=========" << std::endl;
+    for (int i = 0; i != dimsB[0]; i++) {
+      for (int j = 0; j != dimsB[1]; j++) {
+        std::cout << vecB[j + i * dimsB[1]] << " ";
+      }
+      std::cout << std::endl;
+    }
+
+    // Initialize buffers
+    cl::Buffer bufferA(context, CL_MEM_READ_ONLY, sizeof(float) * sizeA);
+    cl::Buffer bufferB(context, CL_MEM_READ_ONLY, sizeof(float) * sizeB);
+    cl::Buffer bufferC(context, CL_MEM_WRITE_ONLY, sizeof(float) * sizeC);
+
 
 
 }

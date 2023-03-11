@@ -1,18 +1,24 @@
 #pragma once
 
+#include <cstdlib>
 #include <fstream>
 #include <streambuf>
 #include <sstream>
+#include <string>
 #include <vector>
 
 template <typename T>
-void get_matrix(char* filepath, std::vector<T> data) {
+void get_matrix(char* filepath, std::vector<T>& data) {
     std::ifstream t(filepath);
     std::string line;
 
     if (t.is_open() && t.good()) {
-      while (std::getline(t, line)) {
-        data.push_back(std::stof(line));
+
+        typename std::vector<T>::iterator it = data.begin();
+
+        while (std::getline(t, line)) {
+            (*it) = std::stof(line);
+            it++;
         }
     }
 

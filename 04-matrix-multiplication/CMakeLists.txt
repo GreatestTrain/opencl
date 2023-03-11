@@ -6,4 +6,5 @@ add_executable(matmul main.cpp)
 target_link_libraries(matmul PRIVATE OpenCL)
 target_include_directories(matmul PRIVATE "/usr/include")
 
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/vadd.cl" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/matmul.cl" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/matrices" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

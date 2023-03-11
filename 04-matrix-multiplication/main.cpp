@@ -12,7 +12,6 @@
 
 #include <file_tools.hpp>
 
-
 int main(int argc, char *argv[])
 {
     // Initialize platforms
@@ -33,8 +32,6 @@ int main(int argc, char *argv[])
     cl::Program program(context, kernel_str.c_str());
     // cl::Program::Sources sources();
     program.build(devices);
-
-    int size = 10;
 
     // write buffers
     unsigned int dimsA[2] = {3, 2};

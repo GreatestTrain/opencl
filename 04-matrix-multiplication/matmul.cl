@@ -16,11 +16,8 @@ kernel void matmul(
 
     for (it = 0; it < w; it++)
     {
-        // sum += A[i * w + it];
         sum += A[i * w + it] * B[it * size_j + j];
     }
 
     res[i * size_j + j] = sum;
-    // res[-1] = size_i;
-
 }

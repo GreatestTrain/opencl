@@ -11,7 +11,6 @@
 
 #include <file_tools.hpp>
 
-
 int main(int argc, char *argv[])
 {
     // Initialize platforms
@@ -35,7 +34,7 @@ int main(int argc, char *argv[])
 
     int size = 10;
 
-    // TODO -> Initalize buffers
+    //  -> Initalize buffers
     // Initialize buffers
     cl::Buffer bufferA(context, CL_MEM_READ_ONLY, sizeof(float) * size);
     cl::Buffer bufferB(context, CL_MEM_READ_ONLY, sizeof(float) * size);
@@ -55,7 +54,6 @@ int main(int argc, char *argv[])
       element = (float)(0.03 + rand() / 100.0f);
     }
 
-
     cl::Kernel kernel(program, "vadd");
     int new_size = 3;
     kernel.setArg(0, bufferA);
@@ -63,9 +61,9 @@ int main(int argc, char *argv[])
     kernel.setArg(2, bufferC);
     kernel.setArg(3, new_size);
 
-    // TODO Initialize queue
+    //  Initialize queue
     cl::CommandQueue queue(context);
-    // TODO Execute queue
+    //  Execute queue
     cl::NDRange range = size;
     queue.enqueueWriteBuffer(bufferA, CL_FALSE, 0, sizeof(float) * size, vecA.data());
     queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, sizeof(float) * size, vecB.data());

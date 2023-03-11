@@ -42,12 +42,6 @@ int main()
         "    output[i] = sin(input[i]);\n"
         "}";
 
-    char* kernel_str = {
-        "void kernel calcSin(global float *data) {\n"
-        "   int id = get_global_id(0);\n"
-        "   data[id] = sin(data[id]);\n"
-        "}\n"
-    };
     // cl::Program::Sources sources(, std::make_pair(source_code, strlen(source_code)));
     // cl::Program::Sources sources(kernel_str);
     cl::Program program(context, source_code);

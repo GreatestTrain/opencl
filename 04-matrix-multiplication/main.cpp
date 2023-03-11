@@ -8,6 +8,7 @@
 #include <exception>
 #include <math.h>
 #include <streambuf>
+#include <math.h>
 
 #include <file_tools.hpp>
 
@@ -38,6 +39,7 @@ int main(int argc, char *argv[])
     // write buffers
     unsigned int dimsA[2] = {3, 2};
     unsigned int dimsB[2] = {2, 4};
+    unsigned int dimsC[2] = {dimsA[0], dimsB[1]};
 
     unsigned int sizeA = dimsA[0] * dimsA[1];
     unsigned int sizeB = dimsB[0] * dimsB[1];
@@ -73,6 +75,30 @@ int main(int argc, char *argv[])
     cl::Buffer bufferC(context, CL_MEM_WRITE_ONLY, sizeof(float) * sizeC);
 
 
+    cl::Kernel kernel(program, "matmul");
+    kernel.setArg(0, bufferA);
+    kernel.setArg(1, bufferB);
+    kernel.setArg(2, bufferC);
+    kernel.setArg(3, dimsA[1]);
+
+    cl::CommandQueue queue(context);
+    cl::NDRange global(dimsC[0], dimsC[1]);
+
+    queue.enqueueWriteBuffer(bufferA, CL_FALSE, 0, sizeof(float) * sizeA, vecA.data());
+    queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, sizeof(float) * sizeB, vecB.data());
+
+    queue.enqueueNDRangeKernel(kernel, cl::NullRange, global, cl::NullRange);
+    queue.enqueueReadBuffer(bufferC, CL_FALSE, 0, sizeof(float) * sizeC, vecC.data());
+    queue.finish();
+
+    std::cout << std::endl;
+    std::cout << "Printing C matrix: " << std::endl << "=========" << std::endl;
+    for (int i = 0; i != dimsC[0]; i++) {
+      for (int j = 0; j != dimsC[1]; j++) {
+        std::cout << round(vecC[j + i * dimsC[1]] / 0.001) * 0.001 << "\t";
+      }
+      std::cout << std::endl;
+    }
 
 }
 

@@ -10,3 +10,5 @@ add_subdirectory(02-check-kernel)
 add_subdirectory(03-vadd-kernel)
 add_subdirectory(04-matrix-multiplication)
 
+enable_testing()
+

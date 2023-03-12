@@ -20,13 +20,13 @@ add_test(
 
 add_test(
     NAME matmul-row-test
-    COMMAND kernel "matmul.cl" "matrices/a.matrix" "matrices/b.matrix"
+    COMMAND kernel "matmul_row.cl" "matrices/a.matrix" "matrices/b.matrix"
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 add_test(
     NAME matmul-row-private-test
-    COMMAND kernel "matmul.cl" "matrices/a.matrix" "matrices/b.matrix"
+    COMMAND kernel "matmul_row_private.cl" "matrices/a.matrix" "matrices/b.matrix"
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
 

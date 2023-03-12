@@ -9,6 +9,7 @@ add_subdirectory(01-check-opencl)
 add_subdirectory(02-check-kernel)
 add_subdirectory(03-vadd-kernel)
 add_subdirectory(04-matrix-multiplication)
+add_subdirectory(05-private-memory)
 
 enable_testing()
 

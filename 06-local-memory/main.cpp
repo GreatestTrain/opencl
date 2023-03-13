@@ -45,23 +45,29 @@ int main(int argc, char* argv[])
     kernel.setArg(0, bufferA);
     kernel.setArg(1, bufferB);
     kernel.setArg(2, bufferC);
-    kernel.setArg(3, dimsA[1]);
 
-    cl::NDRange global;
+    cl::NDRange global, local;
+
+    cl::LocalSpaceArg localB = cl::Local(sizeof(float) * dimsA[0]);
 
     std::cout << "Using \"" << argv[1] << "\" kernel." << std::endl;
 
     if (strcmp(argv[1], "matmul.cl") == 0) {
         global = cl::NDRange(dimsC[0], dimsC[1]);
+        local = cl::NullRange;
+        kernel.setArg(3, dimsA[1]);
     } else {
-        global = cl::NDRange(dimsA[0]);
+        global = cl::NDRange(dimsA[0] * dimsA[1]);
+        local = cl::NDRange(dimsA[1]);
+        kernel.setArg(3, localB);
+        // kernel.setArg(4, dimsA[1]);
         kernel.setArg(4, dimsB[1]);
     }
 
     queue.enqueueWriteBuffer(bufferA, CL_FALSE, 0, sizeof(float) * sizeA, vecA.data());
     queue.enqueueWriteBuffer(bufferB, CL_FALSE, 0, sizeof(float) * sizeB, vecB.data());
 
-    queue.enqueueNDRangeKernel(kernel, cl::NullRange, global, cl::NullRange);
+    queue.enqueueNDRangeKernel(kernel, cl::NullRange, global, local);
     queue.enqueueReadBuffer(bufferC, CL_FALSE, 0, sizeof(float) * sizeC, vecC.data());
     queue.finish();
 

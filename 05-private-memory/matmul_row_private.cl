@@ -1,9 +1,9 @@
-kernel void matmul(
+kernel sjoid matmul(
     global const float* A,
     global const float* B,
     global float *res,
-    const unsigned int w,
-    const unsigned int v
+    const unsigned int sk,
+    const unsigned int sj
 )
 {
     unsigned int i = get_global_id(0);
@@ -12,15 +12,15 @@ kernel void matmul(
     float privA[2048];
     float sum;
 
-    for (k = 0; k < w; k++)
-        privA[k] = A[i * w + k];
+    for (k = 0; k < sk; k++)
+        privA[k] = A[i * sk + k];
 
-    for (j = 0; j < v; j++)
+    for (j = 0; j < sj; j++)
     {
         sum = 0.0f;
-        for (k = 0; k < w; k++) {
-            sum += privA[k] * B[k * v + j];
+        for (k = 0; k < sk; k++) {
+            sum += privA[k] * B[k * sj + j];
         }
-        res[i * v + j] = sum;
+        res[i * sj + j] = sum;
     }
 }

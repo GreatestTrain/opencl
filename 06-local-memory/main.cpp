@@ -48,7 +48,8 @@ int main(int argc, char* argv[])
 
     cl::NDRange global, local;
 
-    cl::LocalSpaceArg localB = cl::Local(sizeof(float) * dimsA[0]);
+    cl::LocalSpaceArg localA = cl::Local(sizeof(float) * dimsA[0]);
+    // cl::LocalSpaceArg localB = cl::Local(sizeof(float) * dimsB[0] * dimsB[1]);
 
     std::cout << "Using \"" << argv[1] << "\" kernel." << std::endl;
 
@@ -59,8 +60,7 @@ int main(int argc, char* argv[])
     } else {
         global = cl::NDRange(dimsA[0] * dimsA[1]);
         local = cl::NDRange(dimsA[1]);
-        kernel.setArg(3, localB);
-        // kernel.setArg(4, dimsA[1]);
+        kernel.setArg(3, localA);
         kernel.setArg(4, dimsB[1]);
     }
 

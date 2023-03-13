@@ -8,6 +8,7 @@ target_include_directories(kernel-1 PRIVATE "/usr/include")
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/matmul.cl" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/matmul_row_private_local.cl" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/matmul_row_private_local_test.cl" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/matrices" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
@@ -22,5 +23,12 @@ add_test(
     COMMAND kernel-1 "matmul_row_private_local.cl" "matrices/a.matrix" "matrices/b.matrix"
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
+
+add_test(
+    NAME matmul-row-test
+    COMMAND kernel-1 "matmul_row_private_local_test.cl" "matrices/a.matrix" "matrices/b.matrix"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
 
 enable_testing()
